@@ -1,0 +1,359 @@
+{
+    "metadata": {
+        "title": "Für Elise",
+        "composer": "Ludwig van Beethoven",
+        "timeSignature": {
+            "beats": 3,
+            "beatType": 8,
+            "beatsPerMeasure": 3
+        },
+        "keySignature": {
+            "fifths": 0,
+            "mode": "minor",
+            "key": "A"
+        },
+        "tempo": 120,
+        "divisions": 480,
+        "ticksPerBeat": 480,
+        "ticksPerMeasure": 1440
+    },
+    "parts": [
+        {
+            "id": "P1",
+            "name": "Piano Right Hand",
+            "index": 0,
+            "isLeftHand": false,
+            "isRightHand": true,
+            "measures": [
+                {
+                    "number": 1,
+                    "absoluteTick": 0,
+                    "absoluteBeat": 0,
+                    "absoluteTime": 0,
+                    "duration": 1440,
+                    "attributes": {
+                        "clef": {
+                            "sign": "G",
+                            "line": 2
+                        },
+                        "keyChange": null,
+                        "timeChange": null
+                    },
+                    "notes": [
+                        {
+                            "step": "E",
+                            "octave": 5,
+                            "alter": 0,
+                            "midiNote": 76,
+                            "noteName": "E",
+                            "noteNameWithOctave": "E5",
+                            "durationTicks": 240,
+                            "durationBeats": 0.5,
+                            "type": "eighth",
+                            "dotted": false,
+                            "stem": "up",
+                            "voice": 1,
+                            "staff": 1,
+                            "absoluteTick": 0,
+                            "absoluteBeat": 0,
+                            "absoluteTime": 0,
+                            "measureNumber": 1
+                        },
+                        {
+                            "step": "D",
+                            "octave": 5,
+                            "alter": 1,
+                            "midiNote": 75,
+                            "noteName": "D#",
+                            "noteNameWithOctave": "D#5",
+                            "durationTicks": 240,
+                            "durationBeats": 0.5,
+                            "type": "eighth",
+                            "dotted": false,
+                            "stem": "up",
+                            "voice": 1,
+                            "staff": 1,
+                            "absoluteTick": 240,
+                            "absoluteBeat": 0.5,
+                            "absoluteTime": 0.25,
+                            "measureNumber": 1
+                        }
+                    ],
+                    "chords": [],
+                    "barline": null,
+                    "hasKeyChange": false,
+                    "hasTimeChange": false,
+                    "hasDoubleBar": false,
+                    "hasRepeat": false
+                }
+            ]
+        },
+        {
+            "id": "P2",
+            "name": "Piano Left Hand",
+            "index": 1,
+            "isLeftHand": true,
+            "isRightHand": false,
+            "measures": [
+                {
+                    "number": 1,
+                    "absoluteTick": 0,
+                    "absoluteBeat": 0,
+                    "absoluteTime": 0,
+                    "duration": 1440,
+                    "attributes": {
+                        "clef": {
+                            "sign": "F",
+                            "line": 4
+                        },
+                        "keyChange": null,
+                        "timeChange": null
+                    },
+                    "notes": [],
+                    "chords": [
+                        {
+                            "notes": [
+                                45,
+                                52,
+                                57
+                            ],
+                            "noteNames": [
+                                "A",
+                                "E",
+                                "A"
+                            ],
+                            "absoluteTick": 0,
+                            "absoluteBeat": 0,
+                            "absoluteTime": 0,
+                            "durationTicks": 1440,
+                            "durationBeats": 3,
+                            "measureNumber": 1,
+                            "staff": 2
+                        }
+                    ],
+                    "barline": null,
+                    "hasKeyChange": false,
+                    "hasTimeChange": false,
+                    "hasDoubleBar": false,
+                    "hasRepeat": false
+                }
+            ]
+        }
+    ],
+    "bassHarmony": [
+        {
+            "id": "P2",
+            "name": "Piano Left Hand",
+            "index": 1,
+            "isLeftHand": true,
+            "isRightHand": false,
+            "measures": []
+        }
+    ],
+    "melody": [
+        {
+            "id": "P1",
+            "name": "Piano Right Hand",
+            "index": 0,
+            "isLeftHand": false,
+            "isRightHand": true,
+            "measures": []
+        }
+    ],
+    "timeline": [
+        {
+            "type": "chord",
+            "part": "Piano Left Hand",
+            "partIndex": 1,
+            "notes": [
+                45,
+                52,
+                57
+            ],
+            "noteNames": [
+                "A",
+                "E",
+                "A"
+            ],
+            "absoluteTick": 0,
+            "absoluteBeat": 0,
+            "absoluteTime": 0,
+            "durationTicks": 1440,
+            "durationBeats": 3,
+            "measureNumber": 1,
+            "staff": 2,
+            "hand": "left"
+        },
+        {
+            "type": "note",
+            "part": "Piano Right Hand",
+            "partIndex": 0,
+            "step": "E",
+            "octave": 5,
+            "alter": 0,
+            "midiNote": 76,
+            "noteName": "E",
+            "noteNameWithOctave": "E5",
+            "durationTicks": 240,
+            "durationBeats": 0.5,
+            "type": "eighth",
+            "dotted": false,
+            "stem": "up",
+            "voice": 1,
+            "staff": 1,
+            "absoluteTick": 0,
+            "absoluteBeat": 0,
+            "absoluteTime": 0,
+            "measureNumber": 1,
+            "hand": "right"
+        },
+        {
+            "type": "note",
+            "part": "Piano Right Hand",
+            "partIndex": 0,
+            "step": "D",
+            "octave": 5,
+            "alter": 1,
+            "midiNote": 75,
+            "noteName": "D#",
+            "noteNameWithOctave": "D#5",
+            "durationTicks": 240,
+            "durationBeats": 0.5,
+            "type": "eighth",
+            "dotted": false,
+            "stem": "up",
+            "voice": 1,
+            "staff": 1,
+            "absoluteTick": 240,
+            "absoluteBeat": 0.5,
+            "absoluteTime": 0.25,
+            "measureNumber": 1,
+            "hand": "right"
+        }
+    ],
+    "phrases": [
+        {
+            "id": "phrase-1",
+            "startMeasure": 1,
+            "endMeasure": 8,
+            "startTick": 0,
+            "endTick": 11520,
+            "startBeat": 0,
+            "endBeat": 24,
+            "startTime": 0,
+            "endTime": 12,
+            "events": [],
+            "chords": [
+                {
+                    "notes": [
+                        45,
+                        52,
+                        57
+                    ],
+                    "noteNames": [
+                        "A",
+                        "E",
+                        "A"
+                    ],
+                    "absoluteTick": 0,
+                    "absoluteBeat": 0,
+                    "absoluteTime": 0,
+                    "durationTicks": 1440,
+                    "durationBeats": 3,
+                    "measureNumber": 1,
+                    "staff": 2
+                },
+                {
+                    "notes": [
+                        52,
+                        57,
+                        64
+                    ],
+                    "noteNames": [
+                        "E",
+                        "A",
+                        "E"
+                    ],
+                    "absoluteTick": 1440,
+                    "absoluteBeat": 3,
+                    "absoluteTime": 1.5,
+                    "durationTicks": 1440,
+                    "durationBeats": 3,
+                    "measureNumber": 2,
+                    "staff": 2
+                }
+            ],
+            "notes": [],
+            "reason": "section_end"
+        },
+        {
+            "id": "phrase-2",
+            "startMeasure": 9,
+            "endMeasure": 16,
+            "startTick": 11520,
+            "endTick": 23040,
+            "startBeat": 24,
+            "endBeat": 48,
+            "startTime": 12,
+            "endTime": 24,
+            "events": [],
+            "chords": [],
+            "notes": [],
+            "reason": "double_bar"
+        }
+    ],
+    "vexFlowData": [
+        {
+            "id": "phrase-1",
+            "measures": [],
+            "staves": [
+                {
+                    "clef": "treble",
+                    "keySignature": "A",
+                    "timeSignature": "3/8",
+                    "notes": [
+                        {
+                            "keys": [
+                                "E/5"
+                            ],
+                            "duration": "eighth",
+                            "dotted": false
+                        },
+                        {
+                            "keys": [
+                                "D#/5"
+                            ],
+                            "duration": "eighth",
+                            "dotted": false
+                        }
+                    ]
+                },
+                {
+                    "clef": "bass",
+                    "keySignature": "A",
+                    "timeSignature": "3/8",
+                    "notes": [
+                        {
+                            "keys": [
+                                "A/2",
+                                "E/3",
+                                "A/3"
+                            ],
+                            "duration": "q",
+                            "isChord": true
+                        },
+                        {
+                            "keys": [
+                                "E/3",
+                                "A/3",
+                                "E/4"
+                            ],
+                            "duration": "q",
+                            "isChord": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

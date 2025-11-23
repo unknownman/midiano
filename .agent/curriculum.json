@@ -1,0 +1,553 @@
+{
+    "curriculum": {
+        "version": "1.0.0",
+        "levels": [
+            {
+                "id": "beginner",
+                "name": "Beginner",
+                "description": "Master basic major and minor chords in root position",
+                "estimatedDuration": "4-6 weeks",
+                "lessons": [
+                    {
+                        "id": "beg-01",
+                        "title": "C Major Triad",
+                        "objectives": [
+                            "Recognize C-E-G pattern",
+                            "Play with correct fingering (1-3-5)",
+                            "Hold for 4 beats"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "recognition",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major"
+                                },
+                                "trials": 5
+                            },
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major"
+                                },
+                                "trials": 10,
+                                "tempo": 60
+                            },
+                            {
+                                "type": "rhythm_sync",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major"
+                                },
+                                "pattern": "whole_notes",
+                                "measures": 4
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 80,
+                            "consecutiveCorrect": 3
+                        },
+                        "hints": {
+                            "fingering": "RH: 1-3-5 (thumb-middle-pinky)",
+                            "notes": "C-E-G"
+                        }
+                    },
+                    {
+                        "id": "beg-02",
+                        "title": "G Major Triad",
+                        "objectives": [
+                            "Learn G-B-D pattern",
+                            "Transition from C to G"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "recognition",
+                                "target": {
+                                    "root": "G",
+                                    "type": "major"
+                                },
+                                "trials": 5
+                            },
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "G",
+                                    "type": "major"
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "progression",
+                                "sequence": [
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    },
+                                    {
+                                        "root": "G",
+                                        "type": "major"
+                                    }
+                                ],
+                                "trials": 8
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 80,
+                            "consecutiveCorrect": 3
+                        }
+                    },
+                    {
+                        "id": "beg-03",
+                        "title": "F Major Triad",
+                        "objectives": [
+                            "Complete I-IV-V in C major"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "F",
+                                    "type": "major"
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "progression",
+                                "sequence": [
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    },
+                                    {
+                                        "root": "F",
+                                        "type": "major"
+                                    },
+                                    {
+                                        "root": "G",
+                                        "type": "major"
+                                    }
+                                ],
+                                "trials": 10
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 85,
+                            "consecutiveCorrect": 4
+                        }
+                    },
+                    {
+                        "id": "beg-04",
+                        "title": "A Minor Triad",
+                        "objectives": [
+                            "First minor chord",
+                            "Compare major vs minor sound"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "recognition",
+                                "target": {
+                                    "root": "A",
+                                    "type": "minor"
+                                },
+                                "trials": 5
+                            },
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "A",
+                                    "type": "minor"
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "comparison",
+                                "pairs": [
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    },
+                                    {
+                                        "root": "A",
+                                        "type": "minor"
+                                    }
+                                ],
+                                "trials": 6
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 80,
+                            "consecutiveCorrect": 3
+                        }
+                    },
+                    {
+                        "id": "beg-05",
+                        "title": "D Minor & E Minor",
+                        "objectives": [
+                            "Expand minor chord vocabulary"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "targets": [
+                                    {
+                                        "root": "D",
+                                        "type": "minor"
+                                    },
+                                    {
+                                        "root": "E",
+                                        "type": "minor"
+                                    }
+                                ],
+                                "trials": 8
+                            },
+                            {
+                                "type": "random_drill",
+                                "pool": [
+                                    "C major",
+                                    "G major",
+                                    "F major",
+                                    "A minor",
+                                    "D minor",
+                                    "E minor"
+                                ],
+                                "trials": 15
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 85,
+                            "consecutiveCorrect": 5
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "intermediate",
+                "name": "Intermediate",
+                "description": "Inversions, 7th chords, and extended harmony",
+                "estimatedDuration": "6-8 weeks",
+                "lessons": [
+                    {
+                        "id": "int-01",
+                        "title": "First Inversion - Major Triads",
+                        "objectives": [
+                            "Understand 1st inversion (3rd in bass)",
+                            "Play C/E, G/B, F/A"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "inversion_practice",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major",
+                                    "inversion": 1
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "inversion_recognition",
+                                "targets": [
+                                    {
+                                        "root": "C",
+                                        "type": "major",
+                                        "inversion": 0
+                                    },
+                                    {
+                                        "root": "C",
+                                        "type": "major",
+                                        "inversion": 1
+                                    }
+                                ],
+                                "trials": 8
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 75,
+                            "consecutiveCorrect": 3
+                        }
+                    },
+                    {
+                        "id": "int-02",
+                        "title": "Second Inversion - Major Triads",
+                        "objectives": [
+                            "Master 2nd inversion (5th in bass)"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "inversion_practice",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major",
+                                    "inversion": 2
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "all_inversions",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major"
+                                },
+                                "trials": 12
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 80,
+                            "consecutiveCorrect": 4
+                        }
+                    },
+                    {
+                        "id": "int-03",
+                        "title": "Dominant 7th Chords",
+                        "objectives": [
+                            "Learn G7, C7, D7 structure"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "G",
+                                    "type": "dominant7"
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "progression",
+                                "sequence": [
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    },
+                                    {
+                                        "root": "G",
+                                        "type": "dominant7"
+                                    },
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    }
+                                ],
+                                "trials": 8
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 80,
+                            "consecutiveCorrect": 3
+                        }
+                    },
+                    {
+                        "id": "int-04",
+                        "title": "Major 7th Chords",
+                        "objectives": [
+                            "Distinguish maj7 from dom7"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "targets": [
+                                    {
+                                        "root": "C",
+                                        "type": "major7"
+                                    },
+                                    {
+                                        "root": "F",
+                                        "type": "major7"
+                                    }
+                                ],
+                                "trials": 10
+                            },
+                            {
+                                "type": "comparison",
+                                "pairs": [
+                                    {
+                                        "root": "C",
+                                        "type": "major7"
+                                    },
+                                    {
+                                        "root": "C",
+                                        "type": "dominant7"
+                                    }
+                                ],
+                                "trials": 6
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 75,
+                            "consecutiveCorrect": 3
+                        }
+                    },
+                    {
+                        "id": "int-05",
+                        "title": "Minor 7th Chords",
+                        "objectives": [
+                            "Complete 7th chord family"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "A",
+                                    "type": "minor7"
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "random_drill",
+                                "pool": [
+                                    "Cmaj7",
+                                    "G7",
+                                    "Am7",
+                                    "Dm7"
+                                ],
+                                "trials": 15
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 80,
+                            "consecutiveCorrect": 4
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "advanced",
+                "name": "Advanced",
+                "description": "Extended chords, voice leading, jazz harmony",
+                "estimatedDuration": "8-10 weeks",
+                "lessons": [
+                    {
+                        "id": "adv-01",
+                        "title": "Diminished 7th Chords",
+                        "objectives": [
+                            "Master symmetrical diminished structure"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "B",
+                                    "type": "diminished7"
+                                },
+                                "trials": 10
+                            },
+                            {
+                                "type": "voice_leading",
+                                "progression": [
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    },
+                                    {
+                                        "root": "B",
+                                        "type": "diminished7"
+                                    },
+                                    {
+                                        "root": "C",
+                                        "type": "major"
+                                    }
+                                ],
+                                "trials": 8
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 75,
+                            "consecutiveCorrect": 3
+                        }
+                    },
+                    {
+                        "id": "adv-02",
+                        "title": "ii-V-I Progressions",
+                        "objectives": [
+                            "Master fundamental jazz progression"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "progression",
+                                "sequence": [
+                                    {
+                                        "root": "D",
+                                        "type": "minor7"
+                                    },
+                                    {
+                                        "root": "G",
+                                        "type": "dominant7"
+                                    },
+                                    {
+                                        "root": "C",
+                                        "type": "major7"
+                                    }
+                                ],
+                                "trials": 12,
+                                "tempo": 80
+                            },
+                            {
+                                "type": "voice_leading",
+                                "sequence": "same as above with smooth transitions",
+                                "trials": 10
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 85,
+                            "consecutiveCorrect": 5
+                        }
+                    },
+                    {
+                        "id": "adv-03",
+                        "title": "Extended Chords (9th, 11th, 13th)",
+                        "objectives": [
+                            "Add color tones to basic chords"
+                        ],
+                        "exercises": [
+                            {
+                                "type": "reproduction",
+                                "target": {
+                                    "root": "C",
+                                    "type": "major9"
+                                },
+                                "trials": 8
+                            },
+                            {
+                                "type": "ear_training",
+                                "targets": [
+                                    "Cmaj7",
+                                    "Cmaj9"
+                                ],
+                                "trials": 10
+                            }
+                        ],
+                        "successCriteria": {
+                            "minAccuracy": 70,
+                            "consecutiveCorrect": 3
+                        }
+                    }
+                ]
+            }
+        ],
+        "adaptiveRules": {
+            "progression": {
+                "unlock_next": {
+                    "minAccuracy": 80,
+                    "consecutiveCorrect": 3
+                },
+                "mastery": {
+                    "minAccuracy": 90,
+                    "consecutiveCorrect": 5
+                },
+                "review_trigger": {
+                    "accuracy_drop": 15,
+                    "failed_attempts": 3
+                }
+            },
+            "difficulty_adjustment": {
+                "increase": {
+                    "condition": "3 consecutive lessons at 90%+",
+                    "action": "skip_similar_exercises"
+                },
+                "decrease": {
+                    "condition": "2 consecutive lessons below 70%",
+                    "action": "add_review_exercises"
+                }
+            }
+        }
+    }
+}

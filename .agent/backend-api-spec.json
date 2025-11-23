@@ -1,0 +1,614 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MIDI Keyboard Trainer API",
+        "version": "1.0.0",
+        "description": "Backend API for authentication, lesson management, and practice sessions"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api",
+            "description": "Development"
+        },
+        {
+            "url": "https://api.keyboardtrainer.app/api",
+            "description": "Production"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "summary": "Register new user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "displayName"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "displayName": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "409": {
+                        "description": "Email already exists"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "summary": "Login user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "headers": {
+                            "Set-Cookie": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "token=abc123; HttpOnly; Secure"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/lessons": {
+            "get": {
+                "summary": "List lessons",
+                "parameters": [
+                    {
+                        "name": "difficulty",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "beginner",
+                                "intermediate",
+                                "advanced"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lessons list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "lessons": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Lesson"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        },
+                                        "page": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create lesson",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LessonCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Lesson created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden (teacher role required)"
+                    }
+                }
+            }
+        },
+        "/lessons/{id}": {
+            "get": {
+                "summary": "Get lesson details",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lesson details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LessonDetail"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Lesson not found"
+                    }
+                }
+            }
+        },
+        "/lessons/import": {
+            "post": {
+                "summary": "Import MusicXML file",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "difficulty": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Lesson created from MusicXML"
+                    },
+                    "400": {
+                        "description": "Invalid file format"
+                    },
+                    "413": {
+                        "description": "File too large (max 10MB)"
+                    }
+                }
+            }
+        },
+        "/practice/sessions": {
+            "post": {
+                "summary": "Start practice session",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "lessonId": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "difficulty": {
+                                        "type": "string"
+                                    },
+                                    "sessionLength": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Session started",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Session"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/practice/sessions/{id}/complete": {
+            "post": {
+                "summary": "Complete session",
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "events": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/Event"
+                                        }
+                                    },
+                                    "finalScore": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Session completed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionStats"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "student",
+                            "teacher",
+                            "admin"
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Lesson": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "difficulty": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "estimatedDuration": {
+                        "type": "integer"
+                    },
+                    "authorId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LessonDetail": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Lesson"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "description": {
+                                "type": "string"
+                            },
+                            "exercises": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Exercise"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "Exercise": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "targetData": {
+                        "type": "object"
+                    },
+                    "successCriteria": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Session": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "lessonId": {
+                        "type": "string"
+                    },
+                    "startedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "score": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Event": {
+                "type": "object",
+                "properties": {
+                    "timestamp": {
+                        "type": "number"
+                    },
+                    "eventType": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                }
+            },
+            "SessionStats": {
+                "type": "object",
+                "properties": {
+                    "totalTasks": {
+                        "type": "integer"
+                    },
+                    "correctTasks": {
+                        "type": "integer"
+                    },
+                    "accuracy": {
+                        "type": "number"
+                    },
+                    "totalTime": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "token"
+            }
+        }
+    },
+    "websocketSchemas": {
+        "description": "WebSocket message schemas for real-time practice sessions",
+        "url": "wss://api.keyboardtrainer.app/practice",
+        "clientToServer": [
+            {
+                "event": "note_event",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "sessionId": {
+                            "type": "string"
+                        },
+                        "timestamp": {
+                            "type": "number"
+                        },
+                        "notes": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "velocity": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "event": "heartbeat",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "sessionId": {
+                            "type": "string"
+                        },
+                        "clientTime": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        ],
+        "serverToClient": [
+            {
+                "event": "score_update",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "score": {
+                            "type": "integer"
+                        },
+                        "correct": {
+                            "type": "boolean"
+                        },
+                        "feedback": {
+                            "type": "string"
+                        },
+                        "latencyMs": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            {
+                "event": "sync",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "serverTime": {
+                            "type": "number"
+                        },
+                        "currentExercise": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "scoringPseudocode": {
+        "description": "Chord event scoring algorithm",
+        "code": "function scoreChordEvent(playedNotes, expectedChord, toleranceMs = 100) {\n  // 1. Time window check\n  const noteTimestamps = playedNotes.map(n => n.timestamp);\n  const timeSpread = Math.max(...noteTimestamps) - Math.min(...noteTimestamps);\n  if (timeSpread > toleranceMs) {\n    return { score: 0, reason: 'notes_not_simultaneous', timeSpread };\n  }\n  \n  // 2. Extract MIDI note numbers\n  const midiNotes = playedNotes.map(n => n.note).sort((a, b) => a - b);\n  \n  // 3. Normalize to pitch classes (0-11)\n  const pitchClasses = [...new Set(midiNotes.map(n => n % 12))].sort((a, b) => a - b);\n  \n  // 4. Get expected chord pattern\n  const expectedPattern = getChordPattern(expectedChord.root, expectedChord.type, expectedChord.inversion);\n  \n  // 5. Match against allowed voicings\n  const exactMatch = arraysEqual(pitchClasses, expectedPattern);\n  if (exactMatch) {\n    return { score: 100, match: 'exact', confidence: 1.0 };\n  }\n  \n  // 6. Check for subset (extra notes)\n  const isSubset = expectedPattern.every(note => pitchClasses.includes(note));\n  if (isSubset) {\n    const extraNotes = pitchClasses.length - expectedPattern.length;\n    const penalty = extraNotes * 10;\n    return { score: Math.max(0, 90 - penalty), match: 'extra_notes', extraNotes };\n  }\n  \n  // 7. Check for superset (missing notes)\n  const isSupersetMatch = pitchClasses.every(note => expectedPattern.includes(note));\n  if (isSupersetMatch) {\n    const missingNotes = expectedPattern.length - pitchClasses.length;\n    const penalty = missingNotes * 15;\n    return { score: Math.max(0, 80 - penalty), match: 'missing_notes', missingNotes };\n  }\n  \n  // 8. Partial match (some correct notes)\n  const correctNotes = pitchClasses.filter(n => expectedPattern.includes(n)).length;\n  const partialScore = (correctNotes / expectedPattern.length) * 60;\n  return { score: Math.round(partialScore), match: 'partial', correctNotes, totalNotes: expectedPattern.length };\n}"
+    }
+}

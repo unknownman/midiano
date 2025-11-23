@@ -1,0 +1,538 @@
+{
+    "project": "MIDI Keyboard Trainer - AntiGravity",
+    "version": "1.0.0",
+    "lastUpdated": "2025-11-24",
+    "techStack": {
+        "frontend": {
+            "framework": "Vue 3 (Composition API)",
+            "justification": "Already in use; excellent reactivity for real-time MIDI; smaller bundle than React; great TypeScript support",
+            "language": "TypeScript",
+            "styling": "Vanilla CSS with CSS Variables (design tokens)",
+            "buildTool": "Vite",
+            "stateManagement": "Pinia (for complex state in V1+)",
+            "testing": "Vitest + Vue Test Utils"
+        },
+        "backend": {
+            "runtime": "Node.js 20 LTS",
+            "framework": "Express.js",
+            "justification": "Lightweight, mature, excellent WebSocket support, large ecosystem for music libraries",
+            "language": "TypeScript (migrate from JS in Phase 1)",
+            "realtime": "ws (WebSocket) for MIDI bridge + Socket.io for collaborative features (V2)",
+            "testing": "Vitest + Supertest"
+        },
+        "database": {
+            "primary": "PostgreSQL 15",
+            "justification": "JSONB for flexible lesson metadata, excellent performance, ACID compliance, free tier on Supabase/Neon",
+            "orm": "Drizzle ORM",
+            "migrations": "Drizzle Kit",
+            "cache": "Redis (Upstash free tier)",
+            "justificationCache": "Session state, real-time leaderboards, rate limiting"
+        },
+        "musicLibraries": {
+            "musicxml": "musicxml-interfaces + opensheetmusicdisplay",
+            "midi": "easymidi (server) + WebMIDI API (browser)",
+            "audio": "Tone.js (WebAudio wrapper)",
+            "notation": "VexFlow or OSMD for score rendering"
+        },
+        "infrastructure": {
+            "hosting": {
+                "frontend": "Vercel (free tier, excellent Vite support)",
+                "backend": "Railway.app or Render.com (free tier with 512MB RAM)",
+                "justification": "Zero-config deployments, automatic HTTPS, preview environments"
+            },
+            "storage": {
+                "files": "Cloudflare R2 (10GB free) or Supabase Storage",
+                "purpose": "MusicXML files, user-uploaded MIDI, lesson assets"
+            },
+            "cicd": {
+                "platform": "GitHub Actions",
+                "pipeline": "Lint → Test → Build → Deploy (on push to main)",
+                "cost": "Free for public repos, 2000 min/month for private"
+            },
+            "monitoring": {
+                "errors": "Sentry (free tier: 5k events/month)",
+                "analytics": "Plausible or Umami (privacy-focused, self-hostable)",
+                "uptime": "BetterStack (free tier)"
+            }
+        }
+    },
+    "milestones": [
+        {
+            "phase": "MVP",
+            "duration": "4 weeks",
+            "goal": "Functional browser-based chord trainer with MIDI input",
+            "deliverables": [
+                "WebMIDI + WebSocket fallback working reliably",
+                "Chord detection engine (12 chord types, inversions)",
+                "Practice mode with 4 difficulty levels",
+                "Real-time visual feedback (notes, chord names)",
+                "Basic scoring and session stats",
+                "Responsive UI with dark mode",
+                "Unit tests for chord detection (80% coverage)"
+            ],
+            "techDebt": [
+                "No user accounts (localStorage only)",
+                "No backend persistence",
+                "Limited chord library",
+                "No lesson authoring"
+            ],
+            "status": "90% complete (based on existing code)"
+        },
+        {
+            "phase": "V1 - Lesson Platform",
+            "duration": "6 weeks",
+            "goal": "Multi-user platform with lesson authoring and MusicXML import",
+            "deliverables": [
+                "User authentication (email + OAuth)",
+                "PostgreSQL backend with User, Lesson, Exercise, Session models",
+                "Lesson authoring UI (WYSIWYG chord sequence builder)",
+                "MusicXML import pipeline (parse → extract chords → generate exercises)",
+                "Progress tracking dashboard (charts, streaks, accuracy trends)",
+                "Teacher/Student roles and lesson assignment",
+                "Score-synced practice (highlight measures in real-time)",
+                "Export/import user data (GDPR compliance)",
+                "REST API + WebSocket for real-time features",
+                "Deployment to Railway + Vercel"
+            ],
+            "newFeatures": [
+                "Adaptive difficulty (auto-adjust based on performance)",
+                "Fingering hints (visual keyboard overlay)",
+                "Metronome integration",
+                "Audio playback of target chords (Tone.js)"
+            ],
+            "migrations": [
+                "Migrate core logic to TypeScript",
+                "Set up Drizzle ORM + migrations",
+                "Implement Redis caching for sessions"
+            ]
+        },
+        {
+            "phase": "V2 - Advanced Features",
+            "duration": "6 weeks",
+            "goal": "Full classical piece practice, community features, mobile support",
+            "deliverables": [
+                "Full MusicXML score rendering (OSMD integration)",
+                "Measure-by-measure practice mode",
+                "Loop regions, tempo adjustment, hands-separate practice",
+                "Community lesson marketplace (browse, rate, fork lessons)",
+                "Collaborative practice rooms (Socket.io)",
+                "Mobile app (React Native + native MIDI bridge)",
+                "Electron desktop app (better MIDI latency)",
+                "ML-based performance analysis (timing, dynamics)",
+                "Adaptive curriculum engine (spaced repetition)",
+                "Analytics dashboard for teachers",
+                "PDF → MusicXML OCR integration (optional, server-side)"
+            ],
+            "scalability": [
+                "Horizontal scaling with Redis session store",
+                "CDN for static assets (Cloudflare)",
+                "Database read replicas",
+                "Rate limiting and abuse prevention"
+            ]
+        }
+    ],
+    "apis": [
+        {
+            "name": "Authentication API",
+            "baseUrl": "/api/auth",
+            "endpoints": [
+                "POST /register - Create new user account",
+                "POST /login - Email/password login",
+                "POST /logout - Invalidate session",
+                "GET /me - Get current user profile",
+                "POST /oauth/google - OAuth login",
+                "POST /refresh - Refresh JWT token"
+            ],
+            "authentication": "JWT (httpOnly cookies) + refresh tokens"
+        },
+        {
+            "name": "Lessons API",
+            "baseUrl": "/api/lessons",
+            "endpoints": [
+                "GET /lessons - List all lessons (paginated, filtered)",
+                "GET /lessons/:id - Get lesson details + exercises",
+                "POST /lessons - Create new lesson (teacher only)",
+                "PUT /lessons/:id - Update lesson",
+                "DELETE /lessons/:id - Delete lesson",
+                "POST /lessons/:id/fork - Duplicate lesson for editing",
+                "GET /lessons/:id/musicxml - Download original MusicXML",
+                "POST /lessons/import - Upload MusicXML file → auto-generate lesson"
+            ]
+        },
+        {
+            "name": "Practice API",
+            "baseUrl": "/api/practice",
+            "endpoints": [
+                "POST /sessions - Start new practice session",
+                "PUT /sessions/:id/events - Log MIDI events (batch)",
+                "POST /sessions/:id/complete - End session, calculate stats",
+                "GET /sessions/:id - Get session details",
+                "GET /sessions - List user's practice history"
+            ]
+        },
+        {
+            "name": "Progress API",
+            "baseUrl": "/api/progress",
+            "endpoints": [
+                "GET /stats - User's overall statistics",
+                "GET /stats/weekly - Weekly practice trends",
+                "GET /stats/lessons/:id - Progress on specific lesson",
+                "GET /achievements - Unlocked achievements/badges",
+                "GET /leaderboard - Global or lesson-specific rankings"
+            ]
+        },
+        {
+            "name": "MIDI Bridge WebSocket",
+            "protocol": "WebSocket",
+            "url": "ws://localhost:3001 (dev) or wss://api.domain.com/midi (prod)",
+            "events": [
+                "Client → Server: { type: 'connect', deviceName: string }",
+                "Client → Server: { type: 'list' }",
+                "Server → Client: { type: 'devices', inputs: [], outputs: [] }",
+                "Server → Client: { type: 'noteon', note, velocity, channel, timestamp }",
+                "Server → Client: { type: 'noteoff', note, velocity, channel, timestamp }",
+                "Server → Client: { type: 'cc', controller, value, channel, timestamp }"
+            ]
+        },
+        {
+            "name": "Real-time Practice WebSocket",
+            "protocol": "Socket.io",
+            "url": "wss://api.domain.com/practice",
+            "rooms": "session:{sessionId}, user:{userId}",
+            "events": [
+                "join_session - Join practice room",
+                "leave_session - Leave practice room",
+                "midi_event - Broadcast MIDI to room (collaborative mode)",
+                "feedback - Real-time feedback from server",
+                "progress_update - Live progress updates"
+            ]
+        }
+    ],
+    "models": [
+        {
+            "name": "User",
+            "table": "users",
+            "fields": [
+                "id: UUID PRIMARY KEY",
+                "email: VARCHAR(255) UNIQUE NOT NULL",
+                "password_hash: VARCHAR(255)",
+                "display_name: VARCHAR(100)",
+                "role: ENUM('student', 'teacher', 'admin') DEFAULT 'student'",
+                "avatar_url: TEXT",
+                "oauth_provider: VARCHAR(50)",
+                "oauth_id: VARCHAR(255)",
+                "preferences: JSONB (theme, notifications, midi_device)",
+                "created_at: TIMESTAMP DEFAULT NOW()",
+                "updated_at: TIMESTAMP DEFAULT NOW()",
+                "last_login_at: TIMESTAMP"
+            ],
+            "indexes": [
+                "email",
+                "oauth_provider, oauth_id"
+            ],
+            "relations": [
+                "hasMany: Session",
+                "hasMany: Lesson (as author)",
+                "belongsToMany: Lesson (as student, through enrollments)"
+            ]
+        },
+        {
+            "name": "Lesson",
+            "table": "lessons",
+            "fields": [
+                "id: UUID PRIMARY KEY",
+                "title: VARCHAR(255) NOT NULL",
+                "description: TEXT",
+                "author_id: UUID REFERENCES users(id)",
+                "difficulty: ENUM('beginner', 'intermediate', 'advanced', 'expert')",
+                "category: VARCHAR(50) (chords, scales, pieces, technique)",
+                "tags: TEXT[] (classical, jazz, pop, etc.)",
+                "is_public: BOOLEAN DEFAULT false",
+                "musicxml_url: TEXT (S3/R2 URL if imported)",
+                "thumbnail_url: TEXT",
+                "estimated_duration: INTEGER (minutes)",
+                "metadata: JSONB (composer, key, time_signature, tempo)",
+                "created_at: TIMESTAMP DEFAULT NOW()",
+                "updated_at: TIMESTAMP DEFAULT NOW()",
+                "published_at: TIMESTAMP"
+            ],
+            "indexes": [
+                "author_id",
+                "difficulty",
+                "category",
+                "is_public"
+            ],
+            "relations": [
+                "belongsTo: User (author)",
+                "hasMany: Exercise",
+                "belongsToMany: User (students, through enrollments)"
+            ]
+        },
+        {
+            "name": "Exercise",
+            "table": "exercises",
+            "fields": [
+                "id: UUID PRIMARY KEY",
+                "lesson_id: UUID REFERENCES lessons(id) ON DELETE CASCADE",
+                "order_index: INTEGER NOT NULL",
+                "type: ENUM('chord', 'scale', 'rhythm', 'sight_reading', 'free_play')",
+                "title: VARCHAR(255)",
+                "instructions: TEXT",
+                "target_data: JSONB (root, chord_type, inversion, notes[], measures[])",
+                "success_criteria: JSONB (min_accuracy, max_attempts, time_limit)",
+                "hints: JSONB (fingering, audio_url, video_url)",
+                "created_at: TIMESTAMP DEFAULT NOW()"
+            ],
+            "indexes": [
+                "lesson_id",
+                "order_index"
+            ],
+            "relations": [
+                "belongsTo: Lesson",
+                "hasMany: Event (practice attempts)"
+            ]
+        },
+        {
+            "name": "Session",
+            "table": "sessions",
+            "fields": [
+                "id: UUID PRIMARY KEY",
+                "user_id: UUID REFERENCES users(id)",
+                "lesson_id: UUID REFERENCES lessons(id) NULL",
+                "type: ENUM('practice', 'assessment', 'free_play')",
+                "started_at: TIMESTAMP DEFAULT NOW()",
+                "ended_at: TIMESTAMP",
+                "duration_seconds: INTEGER",
+                "score: INTEGER DEFAULT 0",
+                "max_score: INTEGER",
+                "accuracy: DECIMAL(5,2) (percentage)",
+                "exercises_completed: INTEGER DEFAULT 0",
+                "exercises_total: INTEGER",
+                "metadata: JSONB (difficulty, device_name, avg_latency_ms)"
+            ],
+            "indexes": [
+                "user_id",
+                "lesson_id",
+                "started_at"
+            ],
+            "relations": [
+                "belongsTo: User",
+                "belongsTo: Lesson",
+                "hasMany: Event"
+            ]
+        },
+        {
+            "name": "Event",
+            "table": "events",
+            "fields": [
+                "id: BIGSERIAL PRIMARY KEY",
+                "session_id: UUID REFERENCES sessions(id) ON DELETE CASCADE",
+                "exercise_id: UUID REFERENCES exercises(id) NULL",
+                "timestamp: TIMESTAMP DEFAULT NOW()",
+                "event_type: ENUM('midi_note', 'chord_detected', 'feedback', 'error')",
+                "data: JSONB (note, velocity, detected_chord, expected_chord, correct, latency_ms)",
+                "created_at: TIMESTAMP DEFAULT NOW()"
+            ],
+            "indexes": [
+                "session_id",
+                "timestamp",
+                "event_type"
+            ],
+            "partitioning": "Partition by RANGE (timestamp) monthly for performance",
+            "retention": "Keep detailed events for 90 days, aggregate older data",
+            "relations": [
+                "belongsTo: Session",
+                "belongsTo: Exercise"
+            ]
+        },
+        {
+            "name": "Enrollment",
+            "table": "enrollments",
+            "fields": [
+                "id: UUID PRIMARY KEY",
+                "user_id: UUID REFERENCES users(id)",
+                "lesson_id: UUID REFERENCES lessons(id)",
+                "enrolled_at: TIMESTAMP DEFAULT NOW()",
+                "progress: JSONB (completed_exercises[], current_exercise_id, streak_days)",
+                "last_practiced_at: TIMESTAMP"
+            ],
+            "indexes": [
+                "user_id",
+                "lesson_id"
+            ],
+            "unique": [
+                "user_id, lesson_id"
+            ]
+        },
+        {
+            "name": "Achievement",
+            "table": "achievements",
+            "fields": [
+                "id: UUID PRIMARY KEY",
+                "user_id: UUID REFERENCES users(id)",
+                "achievement_type: VARCHAR(50) (first_chord, 100_chords, perfect_week, etc.)",
+                "unlocked_at: TIMESTAMP DEFAULT NOW()",
+                "metadata: JSONB (lesson_id, score, etc.)"
+            ],
+            "indexes": [
+                "user_id",
+                "achievement_type"
+            ]
+        }
+    ],
+    "infra": [
+        {
+            "component": "Frontend Hosting",
+            "provider": "Vercel",
+            "tier": "Free (Hobby)",
+            "limits": "100GB bandwidth/month, unlimited builds",
+            "cost": "$0/month",
+            "features": [
+                "Auto HTTPS",
+                "CDN",
+                "Preview deployments",
+                "Automatic Vite optimization"
+            ]
+        },
+        {
+            "component": "Backend Hosting",
+            "provider": "Railway.app",
+            "tier": "Free Trial ($5 credit) → Hobby ($5/month)",
+            "limits": "512MB RAM, 1GB disk, shared CPU",
+            "cost": "$5/month (estimated)",
+            "features": [
+                "Auto-deploy from GitHub",
+                "Environment variables",
+                "Logs",
+                "Metrics"
+            ],
+            "alternative": "Render.com (750 hours/month free)"
+        },
+        {
+            "component": "Database",
+            "provider": "Neon (Serverless Postgres)",
+            "tier": "Free",
+            "limits": "10GB storage, 100 hours compute/month",
+            "cost": "$0/month (MVP/V1), ~$20/month (V2 with scaling)",
+            "features": [
+                "Auto-pause",
+                "Branching",
+                "Point-in-time recovery"
+            ],
+            "alternative": "Supabase (500MB free, includes auth + storage)"
+        },
+        {
+            "component": "Cache / Session Store",
+            "provider": "Upstash Redis",
+            "tier": "Free",
+            "limits": "10k commands/day, 256MB storage",
+            "cost": "$0/month (sufficient for MVP/V1)",
+            "features": [
+                "REST API",
+                "Global replication",
+                "Durable storage"
+            ]
+        },
+        {
+            "component": "File Storage",
+            "provider": "Cloudflare R2",
+            "tier": "Free",
+            "limits": "10GB storage, 1M Class A ops/month",
+            "cost": "$0/month (MVP/V1), ~$5/month (V2)",
+            "features": [
+                "S3-compatible API",
+                "No egress fees",
+                "CDN integration"
+            ]
+        },
+        {
+            "component": "CI/CD",
+            "provider": "GitHub Actions",
+            "tier": "Free (public repo) or 2000 min/month (private)",
+            "cost": "$0/month",
+            "pipeline": "Lint (ESLint, Prettier) → Test (Vitest) → Build → Deploy"
+        },
+        {
+            "component": "Error Tracking",
+            "provider": "Sentry",
+            "tier": "Developer (Free)",
+            "limits": "5k events/month",
+            "cost": "$0/month",
+            "features": [
+                "Source maps",
+                "Release tracking",
+                "Performance monitoring"
+            ]
+        },
+        {
+            "component": "Analytics",
+            "provider": "Plausible (self-hosted) or Umami",
+            "tier": "Free (self-hosted on Railway)",
+            "cost": "$0/month",
+            "features": [
+                "Privacy-focused",
+                "GDPR compliant",
+                "Lightweight script"
+            ]
+        },
+        {
+            "component": "Domain",
+            "provider": "Namecheap or Cloudflare Registrar",
+            "cost": "$10-15/year",
+            "recommendation": "keyboardtrainer.app or chordmaster.io"
+        }
+    ],
+    "estimatedCosts": {
+        "MVP": {
+            "monthly": "$0",
+            "annual": "$15 (domain only)",
+            "notes": "Fully free tier, no credit card required"
+        },
+        "V1": {
+            "monthly": "$5-10",
+            "annual": "$75-135",
+            "breakdown": {
+                "Railway": "$5",
+                "Domain": "$1.25",
+                "Buffer": "$3.75"
+            }
+        },
+        "V2": {
+            "monthly": "$30-50",
+            "annual": "$375-615",
+            "breakdown": {
+                "Railway (scaled)": "$20",
+                "Neon DB": "$10",
+                "R2 Storage": "$5",
+                "Domain": "$1.25",
+                "Buffer": "$13.75"
+            }
+        }
+    },
+    "securityConsiderations": [
+        "MIDI data stays local by default (privacy-first)",
+        "Opt-in for cloud scoring/analytics",
+        "JWT tokens in httpOnly cookies (XSS protection)",
+        "CSRF tokens for state-changing requests",
+        "Rate limiting on API (express-rate-limit + Redis)",
+        "Input validation (Zod schemas)",
+        "SQL injection prevention (Drizzle ORM parameterized queries)",
+        "CORS whitelist for production",
+        "Helmet.js for security headers",
+        "Regular dependency audits (npm audit, Snyk)"
+    ],
+    "performanceTargets": {
+        "midiLatency": "≤ 30-50ms round-trip (WebMIDI direct, ≤100ms via WebSocket)",
+        "apiResponseTime": "≤ 200ms (p95)",
+        "pageLoad": "≤ 2s (First Contentful Paint)",
+        "bundleSize": "≤ 300KB (gzipped)",
+        "databaseQueries": "≤ 50ms (p95) with proper indexing"
+    },
+    "testingStrategy": {
+        "unit": "Vitest - 80% coverage for core logic (chord detection, practice mode)",
+        "integration": "Supertest - API endpoints, database operations",
+        "e2e": "Playwright - Critical user flows (signup, start practice, complete lesson)",
+        "performance": "Lighthouse CI - Automated performance budgets",
+        "midi": "Manual testing with real MIDI keyboards (document device compatibility)"
+    }
+}

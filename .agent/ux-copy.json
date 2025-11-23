@@ -1,0 +1,192 @@
+{
+    "onboarding": {
+        "en": {
+            "welcome": {
+                "title": "Welcome to MIDI Chord Trainer",
+                "subtitle": "Master piano chords with real-time feedback",
+                "description": "Connect your MIDI keyboard and start practicing chords with instant visual and audio feedback. Track your progress and improve your skills systematically."
+            },
+            "midiPermission": {
+                "title": "MIDI Access Required",
+                "description": "This app needs access to your MIDI keyboard to provide real-time feedback. Your MIDI data stays completely private on your device.",
+                "privacy": [
+                    "✓ All MIDI processing happens locally in your browser",
+                    "✓ No MIDI data is sent to our servers",
+                    "✓ Your practice sessions are stored only on your device (unless you create an account)",
+                    "✓ You can export your data anytime"
+                ],
+                "grantButton": "Grant MIDI Access",
+                "troubleshooting": {
+                    "title": "Troubleshooting",
+                    "noDevices": "No MIDI devices found. Make sure your keyboard is connected and powered on.",
+                    "permissionDenied": "MIDI access was denied. Please refresh the page and allow access when prompted.",
+                    "notSupported": "Your browser doesn't support WebMIDI. Try Chrome, Edge, or download our desktop app."
+                }
+            },
+            "setup": {
+                "title": "Setup Your Practice",
+                "deviceSelection": "Select your MIDI keyboard from the list below:",
+                "testConnection": "Play a few notes to test the connection",
+                "connectionSuccess": "Great! We're receiving your input.",
+                "nextButton": "Start Practicing"
+            }
+        },
+        "fa": {
+            "welcome": {
+                "title": "به آموزشگاه کوردهای MIDI خوش آمدید",
+                "subtitle": "کوردهای پیانو را با بازخورد لحظه‌ای یاد بگیرید",
+                "description": "کیبورد MIDI خود را وصل کنید و تمرین کوردها را با بازخورد بصری و صوتی فوری شروع کنید. پیشرفت خود را دنبال کنید و مهارت‌هایتان را به‌طور سیستماتیک بهبود دهید."
+            },
+            "midiPermission": {
+                "title": "دسترسی به MIDI مورد نیاز است",
+                "description": "این برنامه برای ارائه بازخورد لحظه‌ای به دسترسی به کیبورد MIDI شما نیاز دارد. داده‌های MIDI شما کاملاً خصوصی و روی دستگاه شما باقی می‌مانند.",
+                "privacy": [
+                    "✓ تمام پردازش MIDI به‌صورت محلی در مرورگر شما انجام می‌شود",
+                    "✓ هیچ داده MIDI به سرورهای ما ارسال نمی‌شود",
+                    "✓ جلسات تمرین شما فقط روی دستگاه شما ذخیره می‌شوند (مگر اینکه حساب کاربری بسازید)",
+                    "✓ می‌توانید داده‌های خود را در هر زمان خارج کنید"
+                ],
+                "grantButton": "اجازه دسترسی به MIDI",
+                "troubleshooting": {
+                    "title": "عیب‌یابی",
+                    "noDevices": "دستگاه MIDI پیدا نشد. مطمئن شوید کیبورد شما متصل و روشن است.",
+                    "permissionDenied": "دسترسی MIDI رد شد. لطفاً صفحه را رفرش کنید و هنگام درخواست اجازه دهید.",
+                    "notSupported": "مرورگر شما از WebMIDI پشتیبانی نمی‌کند. از Chrome، Edge استفاده کنید یا برنامه دسکتاپ ما را دانلود کنید."
+                }
+            },
+            "setup": {
+                "title": "تنظیم تمرین شما",
+                "deviceSelection": "کیبورد MIDI خود را از لیست زیر انتخاب کنید:",
+                "testConnection": "چند نت بنوازید تا اتصال را تست کنید",
+                "connectionSuccess": "عالی! ورودی شما را دریافت می‌کنیم.",
+                "nextButton": "شروع تمرین"
+            }
+        }
+    },
+    "feedback": {
+        "en": {
+            "success": {
+                "perfect": "✓ Perfect! Exactly right!",
+                "good": "✓ Correct! Well done.",
+                "withExtraNotes": "✓ Correct, but you played some extra notes. Try to play only the required notes.",
+                "encouragement": [
+                    "Excellent work!",
+                    "You're getting better!",
+                    "Keep it up!",
+                    "Great job!",
+                    "Nicely done!"
+                ]
+            },
+            "error": {
+                "wrongRoot": "✗ Wrong root note. Expected {expected}, got {actual}.",
+                "wrongType": "✗ Wrong chord type. You played {actual}, but we need {expected}.",
+                "wrongInversion": "✗ Correct chord, but wrong inversion. Try {expected} inversion.",
+                "incomplete": "✗ Incomplete chord. You're missing some notes.",
+                "notDetected": "Could not detect a valid chord. Make sure to play at least 2-3 notes together.",
+                "encouragement": [
+                    "Don't worry, try again!",
+                    "You're close! Keep practicing.",
+                    "Almost there!",
+                    "Take your time.",
+                    "Review the fingering hint if needed."
+                ]
+            },
+            "tips": {
+                "timing": "💡 Tip: Try to press all notes at the same time for cleaner detection.",
+                "fingering": "💡 Tip: Use the suggested fingering (1-3-5) for better hand position.",
+                "listening": "💡 Tip: Listen to the chord sound - does it match what you expect?",
+                "practice": "💡 Tip: Practice slowly first, then gradually increase speed.",
+                "inversions": "💡 Tip: For inversions, focus on which note is in the bass (lowest)."
+            }
+        },
+        "fa": {
+            "success": {
+                "perfect": "✓ عالی! دقیقاً درست!",
+                "good": "✓ درست است! آفرین.",
+                "withExtraNotes": "✓ درست است، اما چند نت اضافی نواختید. سعی کنید فقط نت‌های مورد نیاز را بنوازید.",
+                "encouragement": [
+                    "کار عالی!",
+                    "دارید بهتر می‌شوید!",
+                    "ادامه بدهید!",
+                    "عالی بود!",
+                    "خیلی خوب!"
+                ]
+            },
+            "error": {
+                "wrongRoot": "✗ نت پایه اشتباه است. انتظار {expected} بود، اما {actual} نواختید.",
+                "wrongType": "✗ نوع کورد اشتباه است. شما {actual} نواختید، اما ما به {expected} نیاز داریم.",
+                "wrongInversion": "✗ کورد درست است، اما وارونگی اشتباه است. {expected} را امتحان کنید.",
+                "incomplete": "✗ کورد ناقص است. برخی نت‌ها را نزدید.",
+                "notDetected": "کورد معتبری شناسایی نشد. مطمئن شوید حداقل ۲-۳ نت را با هم می‌نوازید.",
+                "encouragement": [
+                    "نگران نباشید، دوباره امتحان کنید!",
+                    "نزدیک هستید! به تمرین ادامه دهید.",
+                    "تقریباً رسیدید!",
+                    "عجله نکنید.",
+                    "در صورت نیاز راهنمای انگشت‌گذاری را مرور کنید."
+                ]
+            },
+            "tips": {
+                "timing": "💡 نکته: سعی کنید همه نت‌ها را همزمان فشار دهید تا تشخیص بهتر باشد.",
+                "fingering": "💡 نکته: از انگشت‌گذاری پیشنهادی (۱-۳-۵) برای وضعیت بهتر دست استفاده کنید.",
+                "listening": "💡 نکته: به صدای کورد گوش دهید - آیا با انتظار شما مطابقت دارد؟",
+                "practice": "💡 نکته: ابتدا آهسته تمرین کنید، سپس به تدریج سرعت را افزایش دهید.",
+                "inversions": "💡 نکته: برای وارونگی‌ها، روی اینکه کدام نت در باس (پایین‌ترین) است تمرکز کنید."
+            }
+        }
+    },
+    "ui": {
+        "en": {
+            "buttons": {
+                "connect": "Connect MIDI",
+                "disconnect": "Disconnect",
+                "startPractice": "Start Practice",
+                "nextChord": "Next Chord",
+                "tryAgain": "Try Again",
+                "viewStats": "View Statistics",
+                "exportData": "Export My Data"
+            },
+            "labels": {
+                "difficulty": "Difficulty Level",
+                "sessionLength": "Number of Chords",
+                "currentScore": "Score",
+                "accuracy": "Accuracy",
+                "streak": "Streak",
+                "latency": "Latency"
+            },
+            "status": {
+                "disconnected": "MIDI not connected",
+                "connecting": "Connecting...",
+                "connected": "Connected to {device}",
+                "listening": "Listening (latency: {ms}ms)",
+                "error": "Error: {message}"
+            }
+        },
+        "fa": {
+            "buttons": {
+                "connect": "اتصال MIDI",
+                "disconnect": "قطع اتصال",
+                "startPractice": "شروع تمرین",
+                "nextChord": "کورد بعدی",
+                "tryAgain": "دوباره امتحان کنید",
+                "viewStats": "مشاهده آمار",
+                "exportData": "خروجی گرفتن از داده‌ها"
+            },
+            "labels": {
+                "difficulty": "سطح دشواری",
+                "sessionLength": "تعداد کوردها",
+                "currentScore": "امتیاز",
+                "accuracy": "دقت",
+                "streak": "رکورد پیاپی",
+                "latency": "تاخیر"
+            },
+            "status": {
+                "disconnected": "MIDI متصل نیست",
+                "connecting": "در حال اتصال...",
+                "connected": "متصل به {device}",
+                "listening": "در حال گوش دادن (تاخیر: {ms}ms)",
+                "error": "خطا: {message}"
+            }
+        }
+    }
+}

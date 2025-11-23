@@ -1,0 +1,34 @@
+{
+    "name": "midi-chords-trainer",
+    "version": "1.0.0",
+    "description": "MIDI keyboard chord practice app with Vue frontend and Node.js WebSocket bridge",
+    "type": "module",
+    "scripts": {
+        "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+        "dev:server": "node server/index.js",
+        "dev:client": "cd client && vite",
+        "build": "cd client && vite build",
+        "start": "npm run dev",
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "test:coverage": "vitest --coverage"
+    },
+    "dependencies": {
+        "easymidi": "3.0.1",
+        "express": "4.18.2",
+        "tone": "^15.1.22",
+        "vexflow": "^5.0.0",
+        "vue": "3.4.0",
+        "ws": "8.16.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "5.0.0",
+        "@vitest/coverage-v8": "1.1.0",
+        "@vitest/ui": "1.1.0",
+        "@vue/test-utils": "2.4.3",
+        "concurrently": "8.2.2",
+        "jsdom": "23.0.1",
+        "vite": "5.0.0",
+        "vitest": "1.1.0"
+    }
+}

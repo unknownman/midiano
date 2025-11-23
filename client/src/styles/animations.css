@@ -1,0 +1,545 @@
+/**
+ * Music Interaction Animation System
+ * Complete motion language for MIDI training UI
+ * 
+ * Inspired by: Melodics, Synthesia, Ableton, ROLI
+ * Features: Tempo-synced, velocity-reactive, GPU-accelerated
+ */
+
+/* ============================================================================
+   A. MOTION LANGUAGE - Timing & Easing Tokens
+   ============================================================================ */
+
+:root {
+    /* Base Timing Tokens */
+    --motion-instant: 0ms;
+    --motion-fast: 150ms;
+    --motion-medium: 250ms;
+    --motion-slow: 350ms;
+    --motion-slower: 500ms;
+    --motion-slowest: 800ms;
+
+    /* Music-Tempo-Synced Durations (at 120 BPM = 500ms per beat) */
+    --tempo-whole: 2000ms;
+    /* 1 whole note */
+    --tempo-half: 1000ms;
+    /* 1/2 note */
+    --tempo-quarter: 500ms;
+    /* 1/4 note */
+    --tempo-eighth: 250ms;
+    /* 1/8 note */
+    --tempo-sixteenth: 125ms;
+    /* 1/16 note */
+    --tempo-thirtysecond: 62ms;
+    /* 1/32 note */
+
+    /* Easing Curves - Musical Motion */
+    --ease-linear: linear;
+    --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+    /* Spring-like easing (overshoot) */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Musical easing (anticipation + overshoot) */
+    --ease-musical: cubic-bezier(0.4, 0.0, 0.2, 1.4);
+    --ease-attack: cubic-bezier(0.0, 0.8, 0.2, 1.0);
+    /* Fast attack, slow release */
+    --ease-release: cubic-bezier(0.8, 0.0, 1.0, 0.2);
+    /* Slow attack, fast release */
+
+    /* Velocity-Based Scaling */
+    --velocity-min-scale: 0.95;
+    --velocity-max-scale: 1.15;
+    --velocity-min-brightness: 0.8;
+    --velocity-max-brightness: 1.5;
+}
+
+/* Dynamic tempo calculation (JavaScript will update this) */
+:root {
+    --current-bpm: 120;
+    --beat-duration: calc(60000ms / var(--current-bpm));
+}
+
+/* ============================================================================
+   B. KEYBOARD ANIMATIONS - Piano Key States
+   ============================================================================ */
+
+/* Base key styles */
+.piano-key {
+    position: relative;
+    transition: transform var(--motion-fast) var(--ease-out-quad),
+        box-shadow var(--motion-fast) var(--ease-out-quad);
+    will-change: transform, box-shadow, filter;
+    transform-origin: center bottom;
+}
+
+/* White keys */
+.piano-key.white {
+    background: linear-gradient(180deg,
+            hsl(0, 0%, 98%) 0%,
+            hsl(0, 0%, 92%) 100%);
+    border: 1px solid hsl(220, 10%, 80%);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.piano-key.black {
+    background: linear-gradient(180deg,
+            hsl(220, 20%, 20%) 0%,
+            hsl(220, 20%, 10%) 100%);
+    border: 1px solid hsl(220, 20%, 5%);
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   TARGET NOTE PREVIEW - Subtle glow, slow pulse
+   ────────────────────────────────────────────────────────────────────────── */
+
+.piano-key.target {
+    animation: targetPulse 2s var(--ease-in-out-quad) infinite;
+    box-shadow:
+        0 0 20px hsla(200, 80%, 60%, 0.4),
+        0 0 40px hsla(200, 80%, 60%, 0.2),
+        inset 0 0 20px hsla(200, 80%, 60%, 0.1);
+}
+
+@keyframes targetPulse {
+
+    0%,
+    100% {
+        filter: brightness(1.1);
+        box-shadow:
+            0 0 20px hsla(200, 80%, 60%, 0.4),
+            0 0 40px hsla(200, 80%, 60%, 0.2);
+    }
+
+    50% {
+        filter: brightness(1.3);
+        box-shadow:
+            0 0 30px hsla(200, 80%, 60%, 0.6),
+            0 0 60px hsla(200, 80%, 60%, 0.3);
+    }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   USER NOTE-ON - Velocity-reactive, press-down simulation
+   ────────────────────────────────────────────────────────────────────────── */
+
+.piano-key.pressed {
+    /* Press-down depth (y-translate) */
+    transform: translateY(4px) scale(0.98);
+
+    /* Velocity-based glow (set via inline style) */
+    filter: brightness(var(--key-brightness, 1.2));
+    box-shadow:
+        0 0 20px hsla(200, 90%, 60%, var(--key-glow-intensity, 0.6)),
+        0 0 40px hsla(200, 90%, 60%, var(--key-glow-intensity, 0.3)),
+        inset 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    transition: transform var(--motion-instant),
+        filter var(--motion-fast) var(--ease-attack),
+        box-shadow var(--motion-fast) var(--ease-attack);
+}
+
+/* Velocity blast effect (triggered via JS) */
+@keyframes velocityBlast {
+    0% {
+        transform: translateY(4px) scale(0.98);
+        filter: brightness(var(--key-brightness, 1.5));
+    }
+
+    30% {
+        transform: translateY(4px) scale(1.02);
+        filter: brightness(var(--key-brightness, 1.3));
+    }
+
+    100% {
+        transform: translateY(4px) scale(0.98);
+        filter: brightness(var(--key-brightness, 1.2));
+    }
+}
+
+.piano-key.blast {
+    animation: velocityBlast var(--tempo-sixteenth) var(--ease-spring);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NOTE ACCURACY FEEDBACK
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Perfect timing - Green pulse */
+.piano-key.feedback-perfect {
+    animation: feedbackPerfect var(--motion-medium) var(--ease-spring);
+}
+
+@keyframes feedbackPerfect {
+    0% {
+        background: linear-gradient(180deg,
+                hsl(142, 76%, 55%) 0%,
+                hsl(142, 76%, 45%) 100%);
+        box-shadow:
+            0 0 30px hsla(142, 76%, 55%, 0.8),
+            0 0 60px hsla(142, 76%, 55%, 0.4);
+        transform: translateY(4px) scale(1.05);
+    }
+
+    100% {
+        transform: translateY(4px) scale(0.98);
+    }
+}
+
+/* Good timing - Light green */
+.piano-key.feedback-good {
+    animation: feedbackGood var(--motion-medium) var(--ease-out-quad);
+}
+
+@keyframes feedbackGood {
+    0% {
+        background: linear-gradient(180deg,
+                hsl(84, 76%, 55%) 0%,
+                hsl(84, 76%, 45%) 100%);
+        box-shadow: 0 0 20px hsla(84, 76%, 55%, 0.6);
+    }
+}
+
+/* Early/Late - Orange shake */
+.piano-key.feedback-early,
+.piano-key.feedback-late {
+    animation: feedbackShake var(--motion-medium) var(--ease-in-out-quad);
+}
+
+@keyframes feedbackShake {
+
+    0%,
+    100% {
+        transform: translateY(4px) translateX(0) skewX(0deg);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateY(4px) translateX(-3px) skewX(-2deg);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateY(4px) translateX(3px) skewX(2deg);
+    }
+}
+
+.piano-key.feedback-early {
+    background: linear-gradient(180deg,
+            hsl(38, 92%, 55%) 0%,
+            hsl(38, 92%, 45%) 100%);
+    box-shadow: 0 0 20px hsla(38, 92%, 55%, 0.6);
+}
+
+.piano-key.feedback-late {
+    background: linear-gradient(180deg,
+            hsl(280, 70%, 60%) 0%,
+            hsl(280, 70%, 50%) 100%);
+    box-shadow: 0 0 20px hsla(280, 70%, 60%, 0.6);
+}
+
+/* Wrong note - Red blink */
+.piano-key.feedback-wrong {
+    animation: feedbackWrong var(--motion-medium) var(--ease-in-out-quad);
+}
+
+@keyframes feedbackWrong {
+
+    0%,
+    100% {
+        background: linear-gradient(180deg,
+                hsl(0, 84%, 60%) 0%,
+                hsl(0, 84%, 50%) 100%);
+        box-shadow: 0 0 30px hsla(0, 84%, 60%, 0.8);
+    }
+
+    50% {
+        background: linear-gradient(180deg,
+                hsl(0, 84%, 70%) 0%,
+                hsl(0, 84%, 60%) 100%);
+        box-shadow: 0 0 50px hsla(0, 84%, 60%, 1);
+    }
+}
+
+/* ============================================================================
+   C. METRONOME LIGHT BAR - Tempo-synced pulse
+   ============================================================================ */
+
+.metronome-bar {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg,
+            hsla(220, 20%, 30%, 0.3) 0%,
+            hsla(220, 20%, 30%, 0.1) 100%);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.metronome-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            hsla(45, 100%, 60%, 0.8) 50%,
+            transparent 100%);
+    transform: translateX(-100%);
+    will-change: transform;
+}
+
+/* Beat markers */
+.beat-marker {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: hsla(220, 20%, 50%, 0.5);
+    border-radius: 50%;
+    transition: all var(--tempo-sixteenth) var(--ease-spring);
+}
+
+.beat-marker.active {
+    background: hsl(45, 100%, 60%);
+    box-shadow: 0 0 20px hsl(45, 100%, 60%);
+    transform: translateY(-50%) scale(2);
+}
+
+/* Expanding wave effect on downbeat */
+.beat-wave {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid hsl(45, 100%, 60%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+}
+
+.beat-wave.active {
+    animation: waveExpand var(--tempo-quarter) var(--ease-out-quad);
+}
+
+@keyframes waveExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(10);
+        opacity: 0;
+    }
+}
+
+/* ============================================================================
+   D. CHORD TRANSITIONS - Diagrams & Success Animations
+   ============================================================================ */
+
+.chord-diagram {
+    transition: all var(--motion-medium) var(--ease-musical);
+}
+
+.chord-diagram.enter {
+    animation: chordEnter var(--motion-slow) var(--ease-spring);
+}
+
+@keyframes chordEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.chord-diagram.exit {
+    animation: chordExit var(--motion-medium) var(--ease-in-quad);
+}
+
+@keyframes chordExit {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+/* Success burst particles */
+.success-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: hsl(142, 76%, 55%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleBurst 0.8s var(--ease-out-quad) forwards;
+}
+
+@keyframes particleBurst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Ripple effect */
+.success-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    border: 3px solid hsl(142, 76%, 55%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    animation: rippleExpand 0.6s var(--ease-out-quad);
+}
+
+@keyframes rippleExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+    }
+}
+
+/* ============================================================================
+   E. GLOBAL TRANSITIONS - Lesson States
+   ============================================================================ */
+
+/* Lesson start transition */
+.lesson-start {
+    animation: lessonStart 1s var(--ease-spring);
+}
+
+@keyframes lessonStart {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(50px);
+        filter: blur(10px);
+    }
+
+    60% {
+        transform: scale(1.02) translateY(-5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Lesson complete transition */
+.lesson-complete {
+    animation: lessonComplete 1.5s var(--ease-spring);
+}
+
+@keyframes lessonComplete {
+    0% {
+        transform: scale(1);
+    }
+
+    20% {
+        transform: scale(1.05);
+    }
+
+    40% {
+        transform: scale(0.95) rotate(-2deg);
+    }
+
+    60% {
+        transform: scale(1.02) rotate(2deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Panel slide-ins (tempo-synced) */
+.panel-slide-in {
+    animation: panelSlide var(--tempo-quarter) var(--ease-musical);
+}
+
+@keyframes panelSlide {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Theme transitions */
+.theme-transition {
+    transition:
+        background-color var(--motion-slow) var(--ease-in-out-quad),
+        color var(--motion-slow) var(--ease-in-out-quad),
+        border-color var(--motion-slow) var(--ease-in-out-quad);
+}
+
+/* ============================================================================
+   F. GPU OPTIMIZATION - Performance Hints
+   ============================================================================ */
+
+/* Force GPU acceleration for animated elements */
+.gpu-accelerated {
+    will-change: transform, opacity, filter;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Avoid layout thrashing */
+.no-layout-shift {
+    contain: layout style paint;
+}
+
+/* Batch animations */
+.animation-batch {
+    animation-play-state: paused;
+}
+
+.animation-batch.active {
+    animation-play-state: running;
+}
