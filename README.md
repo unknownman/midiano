@@ -39,7 +39,7 @@ A comprehensive web-based application for practicing piano chords and scales usi
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd "Keyboard Trainer"
+   cd midiano
    ```
 
 2. Install dependencies:
@@ -63,7 +63,7 @@ A comprehensive web-based application for practicing piano chords and scales usi
 ## Project Structure
 
 ```
-Keyboard Trainer/
+midianno/
 ├── client/                  # Frontend application
 │   ├── src/
 │   │   ├── components/      # Vue components (PianoKeyboard, SheetMusic, etc.)
